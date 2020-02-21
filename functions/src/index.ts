@@ -11,27 +11,22 @@ export const getUpdatedBalance = functions.storage.object().onFinalize(async (ob
   
     const fileBucket = object.bucket;
     const filePath:string = object.name!;
-    const contentType = object.contentType;
+    //const contentType = object.contentType;
     
+    const metadata = {
+        contentType: 'text/plain',
+    };
 
-    if (contentType?.startsWith('image/')){
-        return console.log('not a text file');
-    }
     //downloading file
     const fileName = path.basename(filePath);
     const bucket = admin.storage().bucket(fileBucket);
     const tempFilePath = path.join(os.tmpdir(), fileName);
 
-    const metadata = {
-        contentType: contentType,
-      };
-
     await bucket.file(filePath).download({destination: tempFilePath});
     console.log('File downloaded locally to', tempFilePath);
 
-    const myNewFile = new File(fileName, 'tempname.txt', {type: 'txt'});
-
-    const tempFilePath1 = path.join(path.dirname(filePath), myNewFile);
+    //const myNewFile = 'new_${fileName}';
+    const tempFilePath1 = path.join(path.dirname(filePath), fileName);
     await bucket.upload(tempFilePath, {
         destination: tempFilePath1,
         metadata: metadata,
