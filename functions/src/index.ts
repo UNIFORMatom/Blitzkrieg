@@ -15,7 +15,7 @@ export const getUpdatedBalance = functions.storage.object().onFinalize(async (ob
     
 
     if (contentType?.startsWith('image/')){
-        return console.log('not a text file');
+        console.log('not a text file');
     }
     //downloading file
     const fileName = path.basename(filePath);
