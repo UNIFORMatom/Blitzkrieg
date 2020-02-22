@@ -7,7 +7,7 @@ admin.initializeApp()
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
-const readline = require('readline');
+//const readline = require('readline');
 
 export const getUpdatedBalance = functions.storage.object().onFinalize(async (object) => {
   
@@ -70,23 +70,34 @@ export const getUpdatedBalance = functions.storage.object().onFinalize(async (ob
 */
     //let userRef = functions.database.ref('users/wallet/');
     
-    var text = fs.readFileSync('/tmp/myrenamedfile.txt');
-    var textByLine = text.split("\n");
+    let text = fs.readFileSync('/tmp/myrenamedfile.txt');
+    let textByLine = text.split("\n");
+    console.log(textByLine);
 
-    let pipecount;
-    let amount: string;
-    let phno: string;
-    for(var i = 0; i < textByLine.length; ++i){
-        pipecount = 0;
-        amount = '';
-        phno = '';
-        if(textByLine[i] == '|'){
-            pipecount++;
-        }
-        if(pipecount == 3){
-            amount = amount + textByLine[i];
-        } else if(pipecount == 1){
-            phno = phno + textByLine[i];
+    let pipecount, amount, phno, f1, f2;
+
+    for(let k = 0; k < textByLine.length; k++){
+        f1 = 0; f2 = 0;
+        for(let i = 0; i < textByLine[k].length; ++i){
+            pipecount = 0;
+            amount = '';
+            phno = '';
+            if(textByLine[i] == '|'){
+                pipecount++;
+            }
+            if(pipecount == 3 && f1 == 0){
+                for(let j = i; j < textByLine[i].length; j++){
+                    amount = amount + textByLine[i];
+                }
+                console.log('Amount:', amount);
+                f1 = 1;
+            } else if(pipecount == 1 && f2 == 0){
+                for(let j = i; j < i + 10; j++){
+                    phno = phno + textByLine[i];
+                }
+                console.log('Phone no:', phno);
+                f2 = 1;
+            }
         }
     }
 
